@@ -10,7 +10,7 @@ export class GeminiService {
       
       // Load standard model config
       this.model = this.genAI.getGenerativeModel({
-         model: "gemini-1.5-flash", // or custom model name if desired
+         model: "gemini-3.1-flash-lite-preview", // or custom model name if desired
       });
    }
 
