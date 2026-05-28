@@ -4,7 +4,16 @@ let redisClient: ReturnType<typeof createClient>;
 
 export function getRedisClient() {
    if (!redisClient) {
-      redisClient = createClient({ url: process.env.REDIS_URL });
+      const isSecure = process.env.REDIS_URL?.startsWith("rediss:");
+      redisClient = createClient({
+         url: process.env.REDIS_URL,
+         socket: isSecure
+            ? {
+                 tls: true,
+                 rejectUnauthorized: false,
+              }
+            : undefined,
+      });
       redisClient.on("error", (err) => console.error("Redis error:", err));
    }
    return redisClient;
@@ -23,6 +32,6 @@ export function getBullMQConnection() {
       host: url.hostname,
       port: Number(url.port || 6379),
       password: url.password || undefined,
-      tls: url.protocol === "rediss:" ? {} : undefined,
+      tls: url.protocol === "rediss:" ? { rejectUnauthorized: false } : undefined,
    };
 }
